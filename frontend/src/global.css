@@ -1,0 +1,374 @@
+/** @format */
+
+:root {
+  --ff-serif: "Outfit", sans-serif;
+  --ff-sans: "Quicksand", sans-serif;
+
+  /* -----colors----- */
+
+  --clr-white: hsl(0, 0%, 85%);
+  --clr-background: hsl(225, 30%, 10%);
+  --clr-blue: hsl(225, 80%, 50%);
+  --clr-red: hsl(355, 88%, 58%);
+  --clr-green: hsl(171, 86%, 29%);
+  --clr-boxcolor: hsl(207, 95%, 8%);
+  --clr-grey: hsl(224, 19%, 12%);
+  --clr-lightgrey: hsl(222, 12%, 21%);
+  --clr-bordercolor: hsla(215, 82%, 29%, 0.34);
+  --clr-userscreens: hsl(225 29%, 8%);
+
+  /* ----font-sizes--- */
+
+  --fs-300: 0.825rem;
+  --fs-400: 1.25rem;
+  --fs-500: 1.5rem;
+  --fs-600: 2.5rem;
+  --fs-700: 3.125rem;
+  --fs-800: 3.75rem;
+  --fs-900: 4.375rem;
+  --fs-1000: 5rem;
+
+  @media (max-width: 45em) {
+    --fs-900: 3.375rem;
+    --fs-500: 2.175rem;
+    --fs-400: 1.6rem;
+    --fs-300: 1.25rem;
+  }
+}
+
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/Quicksand-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/Outfit-R.woff2) format("woff2");
+}
+
+/* ------------------- */
+/* Reset               */
+/* ------------------- */
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Outfit", "Quicksand", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  color: var(--clr-white);
+  background-color: var(--clr-background);
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: calc(0.5rem + 0.390625vw);
+  color-scheme: dark light;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+ul,
+li {
+  text-wrap: pretty;
+  font-weight: 400;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--clr-white);
+  text-decoration: none;
+}
+
+/* ------------------- */
+/* colors             */
+/* ------------------- */
+
+.white {
+  color: var(--clr-white);
+}
+.bg {
+  color: var(--clr-background);
+}
+.red {
+  color: var(--clr-red);
+}
+.green {
+  color: var(--clr-green);
+}
+.blue {
+  color: var(--clr-blue);
+}
+.boxcolor {
+  color: var(--clr-boxcolor);
+}
+.bordercolor {
+  color: var(--clr-bordercolor);
+}
+
+/* ------------------- */
+/* typograpyh          */
+/* ------------------- */
+
+.ff-serif {
+  font-family: var(--ff-serif);
+}
+.ff-sans {
+  font-family: var(--ff-sans);
+}
+.upper {
+  text-transform: uppercase;
+}
+.fs-1000 {
+  font-size: var(--fs-1000);
+}
+.fs-900 {
+  font-size: var(--fs-900);
+}
+.fs-800 {
+  font-size: var(--fs-800);
+}
+.fs-700 {
+  font-size: var(--fs-700);
+}
+.fs-600 {
+  font-size: var(--fs-600);
+}
+.fs-500 {
+  font-size: var(--fs-500);
+}
+.fs-400 {
+  font-size: var(--fs-400);
+}
+.fs-300 {
+  font-size: var(--fs-300);
+}
+
+/* ------------------- */
+/* line heights        */
+/* ------------------- */
+
+.l-1 {
+  line-height: 1.2;
+}
+.l-2 {
+  line-height: 1.4;
+}
+.l-3 {
+  line-height: 1.6;
+}
+.l-4 {
+  line-height: 1.8;
+}
+.bold {
+  font-weight: 600;
+}
+
+.ls {
+  letter-spacing: 1px;
+}
+/* ------------------- */
+/* utils               */
+/* ------------------- */
+
+.underline-r {
+  position: relative;
+  height: fit-content;
+  margin-top: 0.5rem;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: 3px;
+    left: 0;
+    background-color: var(--clr-red);
+    transform-origin: bottom right;
+    transition: transform 300ms cubic-bezier(0.79, 0.14, 0.15, 0.86);
+  }
+}
+
+.underline-r:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.tooltip {
+  height: 45px;
+  justify-content: center;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #363a45;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  color: #d1d4dc;
+  text-align: center;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  position: absolute;
+  top: 20px;
+  right: calc(45px + 1rem);
+  z-index: 1;
+  opacity: 0;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.btn,
+.btn {
+  margin: 2rem 0rem 2rem 0rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  border: none;
+  background-color: var(--clr-blue);
+  transition: 0.2s ease-in-out;
+
+  &.login_btn:hover {
+    background-color: var(--clr-green);
+    box-shadow: 5px 5px 10px hsla(0, 0%, 0%, 0.292);
+    cursor: pointer;
+  }
+}
+
+.btn {
+  margin-top: 0;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--clr-green);
+  cursor: pointer;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.btn.active {
+  background-color: var(--clr-red);
+  box-shadow: 5px 5px 10px hsla(0, 0%, 0%, 0.292);
+  cursor: pointer;
+}
+
+.center {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.margin_top {
+  margin-top: 1rem;
+}
+.flex {
+  display: flex;
+}
+.space_between {
+  justify-content: space-between;
+}
+
+/* ------------------- */
+/* Global loader       */
+/* ------------------- */
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--clr-userscreens);
+}
+
+.outer-circle {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border: 12px solid transparent;
+  border-top-color: var(--clr-red);
+  border-radius: 50%;
+  animation: rotateOuter 2s linear infinite;
+  clip-path: inset(20deg);
+}
+
+.inner-circle {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 9px solid transparent;
+  border-top-color: var(--clr-blue);
+  border-radius: 50%;
+  animation: rotateInner 1.2s linear infinite;
+  clip-path: inset(20deg);
+}
+
+@keyframes rotateOuter {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateInner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}

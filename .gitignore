@@ -1,0 +1,40 @@
+*.pyc
+__pycache__/
+admin_log.json
+admin.json
+audit_log.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.test.local
+
+# Editor directories and files
+node_modules
+dist
+dist-ssr
+*.local
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS-specific
+Thumbs.db
