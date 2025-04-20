@@ -9,7 +9,7 @@ redis_client = get_redis_client()
 logger = setup_logger(__name__)
 
 
-def set_cache(key, value, expire=3600):
+def set_cache(key, value, expire=None):
     try:
         serialized_value = json.dumps(value)
         redis_client.setex(key, expire, serialized_value)

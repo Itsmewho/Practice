@@ -1,13 +1,18 @@
 import smtplib, secrets
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from config.configure import SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+from config.configure import (
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_USER,
+    SMTP_PASS,
+    FRONTEND_EMAIL_VARIFICATION,
+)
 from utils.utils import red, green, reset, setup_logger
-
-logger = setup_logger(__name__)
 
 
 def send_email(to_address, subject, body, is_html=False):
+    logger = setup_logger(__name__)
     try:
         msg = MIMEMultipart()
         msg["From"] = SMTP_USER
@@ -39,6 +44,7 @@ def send_email(to_address, subject, body, is_html=False):
 
 
 def send_2fa_code(email):
+    logger = setup_logger(__name__)
     try:
         code = secrets.randbelow(900000) + 100000
 
@@ -67,3 +73,35 @@ def send_2fa_code(email):
     except Exception as e:
         logger.error(red + f"Error generating/sending 2FA code: {e}" + reset)
         return None
+
+
+def send_verification_email(email, token):
+    logger = setup_logger(__name__)
+    try:
+        verification_url = f"{FRONTEND_EMAIL_VARIFICATION}?token={token}"
+
+        subject = "Verify Your Email"
+        body = f"""
+        <html>
+            <body>
+                <p>Welcome!</p>
+                <p>Click the link below to verify your email:</p>
+                <a href="{verification_url}">Verify Email</a>
+                <p>This link will expire in 5 minutes.</p>
+            </body>
+        </html>
+        """
+
+        sent = send_email(email, subject, body, is_html=True)
+        if not sent:
+            return {"success": False, "message": "Failed to send verification email."}
+
+        logger.info(green + f"Verification email sent to {email}" + reset)
+        return {"success": True, "message": "Verification email sent successfully."}
+
+    except Exception as e:
+        logger.error(red + f"Error sending verification email: {e}" + reset)
+        return {
+            "success": False,
+            "message": f"Unexpected error sending verification email: {e}",
+        }

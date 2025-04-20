@@ -1,4 +1,4 @@
-import logging, bcrypt
+import logging, bcrypt, secrets
 from colorama import Style, Fore
 
 
@@ -15,6 +15,10 @@ def setup_logger(name: str, level=logging.INFO):
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
     return logging.getLogger(name)
+
+
+def generate_verification_token():
+    return secrets.token_urlsafe(32)
 
 
 def hash_password(password):
