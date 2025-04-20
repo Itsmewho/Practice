@@ -11,3 +11,17 @@ REDIS_DB = int(os.getenv("REDIS_DB", 0))
 
 # -- SQL
 CONNECTION_STRING = os.getenv("DB_CONNECTION")
+
+# -- Keys
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+SESSION_KEY = os.getenv("SESSION_KEY")
+RESET_KEY = os.getenv("RESET_KEY")
+UNLOCK_KEY = os.getenv("UNLOCK_KEY")
+
+# -- Email
+
+SMTP_HOST = os.getenv("SMTP_HOST")
+SMTP_PORT = os.getenv("SMTP_PORT")
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASS = os.getenv("SMTP_PASS")
