@@ -4,6 +4,7 @@ import redis
 from connections.redis import get_redis_client
 from utils.utils import green, red, blue, reset, setup_logger
 
+
 redis_client = get_redis_client()
 logger = setup_logger(__name__)
 
