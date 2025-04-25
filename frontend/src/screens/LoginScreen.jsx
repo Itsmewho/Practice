@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import Toast from "../Toast/ToastPopup";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/login_api";
+import { loginUser } from "../api/Login_api";
+import Toast from "../components/Toast/ToastPopup";
 import styles from "./styles/Login.module.css";
 
 const LoginScreen = () => {
+  const navigate = useNavigate();
   const [attempts, setAttempts] = useState(0);
   const [toast, setToast] = useState(null);
   const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ const LoginScreen = () => {
   };
 
   const sanitizeInput = (value) => {
-    return value.replace(/[<>]/g, ""); // Prevent basic HTML injection
+    return value.replace(/[<>]/g, "");
   };
 
   const handleChange = (e) => {
