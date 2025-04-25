@@ -1,3 +1,4 @@
+import React from "react";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import {
@@ -12,12 +13,14 @@ import "./global.css";
 import App from "./App.jsx";
 
 // Main screens
-import { LoginScreen } from "./screens/LoginScreen.jsx";
+import LoginScreen from "./screens/LoginScreen.jsx";
+import RegisterScreen from "./screens/RegisterScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<LoginScreen />} />
+      <Route path="/Register" element={<RegisterScreen />} />
     </Route>
   )
 );

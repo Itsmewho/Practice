@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import styles from "./styles/Register.module.css";
+import React from "react";
 
 const RegisterScreen = () => {
   return <div>RegisterScreen</div>;

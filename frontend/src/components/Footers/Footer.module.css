@@ -1,0 +1,9 @@
+.footer_container {
+  padding: 0.5rem;
+  border-radius: 8px;
+  margin: 4px;
+  background-color: var(--clr-userscreens);
+}
+.footer_text {
+  height: 25px;
+}
