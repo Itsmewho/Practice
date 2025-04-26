@@ -1,8 +1,7 @@
-import React from "react";
 import PropTypes from "prop-types";
 import "./Tooltip.css";
 
-//To lazy to refactor the alrady used tooltips So,.. there you have it!
+//To lazy to refactor the allready used tooltips So,.. there you have it!
 
 const Tooltip = ({ children, tooltipText, position = "top", onClick }) => {
   return (
