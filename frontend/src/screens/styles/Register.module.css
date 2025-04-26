@@ -1,0 +1,71 @@
+.registerContainer {
+  display: grid;
+  justify-content: center;
+  margin: 20vh auto;
+  padding: 2rem;
+  width: 400px;
+  border: 2px solid var(--clr-bordercolor);
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px hsla(0, 0%, 0%, 0.22);
+  background-color: var(--clr-boxcolor);
+}
+
+.title {
+  font-size: var(--fs-400);
+  text-align: center;
+  margin: 0.5rem;
+}
+
+.label {
+  display: flex;
+  margin: 5px 0px;
+  margin-top: 0.5rem;
+}
+
+.input {
+  display: flex;
+  border: none;
+  background-color: var(--clr-userscreens);
+  color: var(--clr-white);
+  height: 30px;
+  border-radius: 5px;
+  padding: 0.2rem;
+}
+.input:focus {
+  outline: 2px solid var(--clr-bordercolor);
+}
+.input::after {
+  background-color: aqua;
+}
+
+.input.error {
+  border: 1px solid var(--clr-red);
+}
+
+.input.success {
+  border: 1px solid var(--clr-green);
+}
+
+.center {
+  text-align: center;
+}
+
+.registerBtn {
+  margin: 2rem 0 1rem 0;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  border: none;
+  background-color: var(--clr-blue);
+  transition: 0.2s ease-in-out;
+
+  &.registerBtn:hover {
+    background-color: var(--clr-green);
+    box-shadow: 5px 5px 10px hsla(0, 0%, 0%, 0.292);
+    cursor: pointer;
+  }
+}
+
+.disabledBtn {
+  background-color: var(--clr-red);
+  cursor: not-allowed;
+}

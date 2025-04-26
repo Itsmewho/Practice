@@ -1,6 +1,7 @@
 import { showToast } from "../utils/toastHelper";
 import { emailRegex } from "./validators";
 
+// Sanitize it!
 export const sanitizeEmailInput = (value, setToast) => {
   if (/[<>"'`;\/\\]/g.test(value)) {
     if (setToast) {
@@ -21,6 +22,7 @@ export const sanitizePasswordInput = (value, setToast) => {
   return { sanitized: value, hasError: false };
 };
 
+// Validate the shit out of it
 export const handleValidateInput = ({
   name,
   value,
@@ -30,18 +32,26 @@ export const handleValidateInput = ({
 }) => {
   let error = null;
 
-  if (name.includes("email")) {
+  if (name === "email") {
     if (!emailRegex.test(value)) {
       error = "Invalid email format.";
     }
+  } else if (name === "confirmEmail") {
+    if (mode === "hard" && value !== formData.email) {
+      error = "Emails do not match.";
+    } else if (
+      mode === "soft" &&
+      formData.email &&
+      !value.startsWith(formData.email.slice(0, value.length))
+    ) {
+      error = "Emails don't match.";
+    }
   } else if (name === "password") {
     if (mode === "hard" && value.length < 6) {
-      // Only check password length in hard mode
       error = "Password must be at least 6 characters.";
     }
   } else if (name === "confirmPassword") {
     if (mode === "hard" && value !== formData.password) {
-      // Only check on submit
       error = "Passwords do not match.";
     }
   }
@@ -53,6 +63,7 @@ export const handleValidateInput = ({
   return error;
 };
 
+// Handle Input
 export const handleInput = ({
   e,
   formData,

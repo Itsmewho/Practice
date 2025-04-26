@@ -58,7 +58,7 @@
   background-color: var(--clr-blue);
   transition: 0.2s ease-in-out;
 
-  &.login_btn:hover {
+  &.loginBtn:hover {
     background-color: var(--clr-green);
     box-shadow: 5px 5px 10px hsla(0, 0%, 0%, 0.292);
     cursor: pointer;

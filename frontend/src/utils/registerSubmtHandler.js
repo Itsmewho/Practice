@@ -1,22 +1,21 @@
 import { handleValidateInput } from "./sanitizerHelper";
 import { showToast } from "../utils/toastHelper";
 
-export const handleLoginSubmit = async ({
+export const handleRegisterSubmit = async ({
   e,
   formData,
   setInputStatus,
   setToast,
-  loginUser, // backend function to login user
+  registerUser, // backend function to register user
   setAttempts,
   attempts,
-  navigate,
 }) => {
   e.preventDefault();
 
   const isLocked = attempts >= 3;
 
   if (isLocked) {
-    showToast(setToast, "Too many login attempts. Please wait.", "error");
+    showToast(setToast, "Too many attempts. Please wait.", "error");
     return;
   }
 
@@ -30,19 +29,22 @@ export const handleLoginSubmit = async ({
     return;
   }
 
-  const result = await loginUser(formData);
-
-  showToast(setToast, result.message, result.success ? "success" : "error");
+  const result = await registerUser(formData);
 
   if (result.success) {
-    setTimeout(() => navigate("/2Fa"), 1500);
+    showToast(
+      setToast,
+      "Registration successful! Please verify your email.",
+      "success"
+    );
   } else {
+    showToast(setToast, result.message || "Registration failed.", "error");
     setAttempts((prev) => {
       const updated = prev + 1;
       if (updated >= 3) {
         setTimeout(() => {
           setAttempts(0);
-          showToast(setToast, "Login unlocked. Please try again.", "success");
+          showToast(setToast, "You can try registering again.", "success");
         }, 30000);
       }
       return updated;
