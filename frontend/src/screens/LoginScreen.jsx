@@ -2,8 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/Login_api";
 import { handleLoginSubmit } from "../utils/loginSubmitHandler";
-import { showToast } from "../utils/toastHelper"; // It Does Work Don't worry :P
-import { sanitizeInput } from "../utils/sanitizerHelper";
+import { handleInput } from "../utils/sanitizerHelper";
 import Toast from "../components/Toast/ToastPopup";
 import styles from "./styles/Login.module.css";
 
@@ -19,10 +18,13 @@ const LoginScreen = () => {
   const isLocked = attempts >= 3;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    const sanitized = sanitizeInput(value);
-    setFormData((prev) => ({ ...prev, [name]: sanitized }));
-    setInputStatus((prev) => ({ ...prev, [name]: "" }));
+    handleInput({
+      e,
+      formData,
+      setFormData,
+      setInputStatus,
+      setToast,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -39,6 +41,7 @@ const LoginScreen = () => {
       navigate,
     });
   };
+
   return (
     <div className={styles.loginContainer}>
       <h1 className={styles.title}>Login</h1>
@@ -52,7 +55,7 @@ const LoginScreen = () => {
             } ${inputStatus.email === "success" ? styles.success : ""}`}
             ref={emailRef}
             name="email"
-            placeholder="Your@mail.com"
+            placeholder="Your@Email.com"
             value={formData.email}
             autoComplete="email"
             onChange={(e) => {
