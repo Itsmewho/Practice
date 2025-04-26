@@ -33,8 +33,6 @@ export const handleLoginSubmit = async ({
 
   const result = await loginUser(formData);
 
-  resetForm(setFormData, setInputStatus);
-
   showToast(setToast, result.message, result.success ? "success" : "error");
 
   if (result.success) {

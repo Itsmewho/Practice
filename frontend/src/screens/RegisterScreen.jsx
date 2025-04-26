@@ -93,6 +93,7 @@ const RegisterScreen = () => {
             value={formData.password}
             name="password"
             type="password"
+            placeholder="min 6 characters"
             autoComplete="new-password"
             onChange={handleChange}
           />
