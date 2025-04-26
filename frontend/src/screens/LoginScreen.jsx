@@ -1,90 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/Login_api";
+import { handleLoginSubmit } from "../utils/loginSubmitHandler";
+import { showToast } from "../utils/toastHelper"; // It Does Work Don't worry :P
+import { sanitizeInput } from "../utils/sanitizerHelper";
 import Toast from "../components/Toast/ToastPopup";
 import styles from "./styles/Login.module.css";
 
 const LoginScreen = () => {
   const navigate = useNavigate();
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
   const [attempts, setAttempts] = useState(0);
   const [toast, setToast] = useState(null);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [inputStatus, setInputStatus] = useState({ email: "", password: "" });
 
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const sanitizeInput = (value) => {
-    return value.replace(/[<>]/g, "");
-  };
+  const isLocked = attempts >= 3;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const sanitized = sanitizeInput(value);
-    setFormData((prev) => ({
-      ...prev,
-      [name]: sanitized,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: sanitized }));
+    setInputStatus((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.email || !formData.password) {
-      showToast("Please fill out all fields", "error");
-      return;
-    }
-
-    if (attempts >= 5) {
-      showToast("Too many login attempts. Please wait.", "error");
-      return;
-    }
-
-    const result = await loginUser(formData);
-
-    showToast(result.message, result.success ? "success" : "error");
-
-    if (result.success) {
-      setTimeout(() => navigate("/2Fa"), 1500);
-    } else {
-      setAttempts((prev) => prev + 1);
-    }
+  const handleSubmit = (e) => {
+    handleLoginSubmit({
+      e,
+      formData,
+      setInputStatus,
+      setToast,
+      emailRef,
+      passwordRef,
+      loginUser,
+      setAttempts,
+      attempts,
+      navigate,
+    });
   };
-
   return (
-    <div className={styles.login_container}>
+    <div className={styles.loginContainer}>
       <h1 className={styles.title}>Login</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
           <label className={styles.label}>Email:</label>
           <input
-            className={styles.input}
-            type="email"
+            className={`${styles.input} ${
+              inputStatus.email === "error" ? styles.error : ""
+            } ${inputStatus.email === "success" ? styles.success : ""}`}
+            ref={emailRef}
             name="email"
-            required
+            placeholder="Your@mail.com"
             value={formData.email}
-            onChange={handleChange}
+            autoComplete="email"
+            onChange={(e) => {
+              handleChange(e);
+            }}
           />
         </div>
         <div>
           <label className={styles.label}>Password:</label>
           <input
-            className={styles.input}
-            type="password"
+            className={`${styles.input} ${
+              inputStatus.password === "error" ? styles.error : ""
+            } ${inputStatus.password === "success" ? styles.success : ""}`}
+            ref={passwordRef}
             name="password"
-            required
+            type="password"
+            placeholder="Password"
+            autoComplete="current-password"
             value={formData.password}
             onChange={handleChange}
           />
         </div>
         <div className={styles.center}>
-          <button className={styles.login_btn} type="submit">
-            Login
+          <button
+            className={`${styles.loginBtn} ${
+              isLocked ? styles.disabledBtn : ""
+            }`}
+            type="submit"
+          >
+            {isLocked ? "Locked" : "Login"}
           </button>
         </div>
       </form>
