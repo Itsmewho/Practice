@@ -1,12 +1,13 @@
-import { handleValidateInput } from "./sanitizerHelper";
 import { showToast } from "../utils/toastHelper";
+import { handleValidateInput } from "./sanitizerHelper";
 
 export const handleRegisterSubmit = async ({
   e,
   formData,
+  setFormData,
   setInputStatus,
   setToast,
-  registerUser, // backend function to register user
+  registerUser,
   setAttempts,
   attempts,
 }) => {
@@ -31,6 +32,8 @@ export const handleRegisterSubmit = async ({
 
   const result = await registerUser(formData);
 
+  resetForm(setFormData, setInputStatus);
+
   if (result.success) {
     showToast(
       setToast,
@@ -50,6 +53,22 @@ export const handleRegisterSubmit = async ({
       return updated;
     });
   }
+};
+
+const resetForm = (setFormData, setInputStatus) => {
+  setFormData({
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  setInputStatus({
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+  });
 };
 
 const validateBeforeSubmit = ({ formData, setInputStatus, setToast }) => {

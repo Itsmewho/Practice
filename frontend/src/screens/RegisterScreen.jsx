@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { handleInput } from "../utils/sanitizerHelper";
-import { handleRegisterSubmit } from "../utils/loginSubmitHandler";
+import { handleRegisterSubmit } from "../utils/registerSubmitHandler";
 import { registerUser } from "../api/Register_api";
 import Toast from "../components/Toast/ToastPopup";
 import styles from "./styles/Register.module.css";
@@ -42,6 +42,7 @@ const RegisterScreen = () => {
     handleRegisterSubmit({
       e,
       formData,
+      setFormData,
       setInputStatus,
       setToast,
       registerUser,
@@ -78,7 +79,6 @@ const RegisterScreen = () => {
             ref={confirmEmailRef}
             value={formData.confirmEmail}
             name="confirmEmail"
-            placeholder="Confirm your email"
             autoComplete="off"
             onChange={handleChange}
           />
@@ -93,7 +93,6 @@ const RegisterScreen = () => {
             value={formData.password}
             name="password"
             type="password"
-            placeholder="Password"
             autoComplete="new-password"
             onChange={handleChange}
           />
@@ -110,7 +109,6 @@ const RegisterScreen = () => {
             value={formData.confirmPassword}
             name="confirmPassword"
             type="password"
-            placeholder="Confirm Password"
             autoComplete="new-password"
             onChange={handleChange}
           />

@@ -31,6 +31,7 @@ const LoginScreen = () => {
     handleLoginSubmit({
       e,
       formData,
+      setFormData,
       setInputStatus,
       setToast,
       emailRef,

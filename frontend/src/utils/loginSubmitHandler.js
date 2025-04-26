@@ -4,6 +4,7 @@ import { showToast } from "../utils/toastHelper";
 export const handleLoginSubmit = async ({
   e,
   formData,
+  setFormData,
   setInputStatus,
   setToast,
   loginUser, // backend function to login user
@@ -31,6 +32,8 @@ export const handleLoginSubmit = async ({
   }
 
   const result = await loginUser(formData);
+
+  resetForm(setFormData, setInputStatus);
 
   showToast(setToast, result.message, result.success ? "success" : "error");
 
@@ -77,4 +80,20 @@ const validateBeforeSubmit = ({ formData, setInputStatus, setToast }) => {
   }
 
   return isValid;
+};
+
+const resetForm = (setFormData, setInputStatus) => {
+  setFormData({
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  setInputStatus({
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+  });
 };
