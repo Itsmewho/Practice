@@ -79,19 +79,3 @@ const validateBeforeSubmit = ({ formData, setInputStatus, setToast }) => {
 
   return isValid;
 };
-
-const resetForm = (setFormData, setInputStatus) => {
-  setFormData({
-    email: "",
-    confirmEmail: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  setInputStatus({
-    email: "",
-    confirmEmail: "",
-    password: "",
-    confirmPassword: "",
-  });
-};

@@ -57,15 +57,15 @@ export const handleRegisterSubmit = async ({
 
 const resetForm = (setFormData, setInputStatus) => {
   setFormData({
+    name: "",
     email: "",
-    confirmEmail: "",
     password: "",
     confirmPassword: "",
   });
 
   setInputStatus({
+    name: "",
     email: "",
-    confirmEmail: "",
     password: "",
     confirmPassword: "",
   });

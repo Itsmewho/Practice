@@ -7,21 +7,21 @@ import styles from "./styles/Register.module.css";
 
 const RegisterScreen = () => {
   const emailRef = useRef(null);
-  const confirmEmailRef = useRef(null);
+  const nameRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
 
   const [toast, setToast] = useState(null);
   const [attempts, setAttempts] = useState(0);
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    confirmEmail: "",
     password: "",
     confirmPassword: "",
   });
   const [inputStatus, setInputStatus] = useState({
+    name: "",
     email: "",
-    confirmEmail: "",
     password: "",
     confirmPassword: "",
   });
@@ -56,6 +56,19 @@ const RegisterScreen = () => {
       <h1 className={styles.title}>Register</h1>
       <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
         <div>
+          {/* Name */}
+          <label className={styles.label}>Name</label>
+          <input
+            className={`${styles.input} ${
+              inputStatus.name === "error" ? styles.error : ""
+            } ${inputStatus.name === "success" ? styles.success : ""}`}
+            ref={nameRef}
+            value={formData.name}
+            name="name"
+            placeholder="Yourname"
+            autoComplete="off"
+            onChange={handleChange}
+          />
           {/* Email */}
           <label className={styles.label}>Email:</label>
           <input
@@ -66,19 +79,6 @@ const RegisterScreen = () => {
             value={formData.email}
             name="email"
             placeholder="Your@Email.com"
-            autoComplete="off"
-            onChange={handleChange}
-          />
-
-          {/* Confirm Email */}
-          <label className={styles.label}>Confirm Email:</label>
-          <input
-            className={`${styles.input} ${
-              inputStatus.confirmEmail === "error" ? styles.error : ""
-            } ${inputStatus.confirmEmail === "success" ? styles.success : ""}`}
-            ref={confirmEmailRef}
-            value={formData.confirmEmail}
-            name="confirmEmail"
             autoComplete="off"
             onChange={handleChange}
           />

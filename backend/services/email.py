@@ -6,7 +6,7 @@ from config.configure import (
     SMTP_PORT,
     SMTP_USER,
     SMTP_PASS,
-    FRONTEND_EMAIL_VARIFICATION,
+    BASE_URL,
 )
 from utils.utils import red, green, reset, setup_logger
 
@@ -78,7 +78,7 @@ def send_2fa_code(email):
 def send_verification_email(email, token):
     logger = setup_logger(__name__)
     try:
-        verification_url = f"{FRONTEND_EMAIL_VARIFICATION}?token={token}"
+        verification_url = f"{BASE_URL}/verify-email?token={token}"
 
         subject = "Verify Your Email"
         body = f"""

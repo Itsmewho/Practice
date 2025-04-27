@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
 from flask import send_from_directory
-
+from routes.register.register_route import register_bp
 
 app = Flask(__name__)
 CORS(app)
 
 
 # All routes.
+app.register_blueprint(register_bp)
 
 
 # Favicon fun
