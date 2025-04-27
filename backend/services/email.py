@@ -43,38 +43,6 @@ def send_email(to_address, subject, body, is_html=False):
     return False
 
 
-def send_2fa_code(email):
-    logger = setup_logger(__name__)
-    try:
-        code = secrets.randbelow(900000) + 100000
-
-        subject = "Your Two-Factor Authentication Code"
-        body = f"""
-        <html>
-            <body style="font-family: Arial, sans-serif;">
-                <p>Hello,</p>
-                <p>Your <strong>2FA code</strong> is:</p>
-                <h2>{code}</h2>
-                <p>This code will expire in 5 minutes. </p>
-                <br>
-                <p style="font-size: 0.9em; color: #888;">If you did not request this, please ignore this message.</p>
-            </body>
-        </html>
-        """
-
-        sent = send_email(email, subject, body, is_html=True)
-        if not sent:
-            logger.error(red + f"Failed to send 2FA email to {email}" + reset)
-            return None
-
-        logger.info(green + f"2FA code sent to {email}" + reset)
-        return str(code)
-
-    except Exception as e:
-        logger.error(red + f"Error generating/sending 2FA code: {e}" + reset)
-        return None
-
-
 def send_verification_email(email, token):
     logger = setup_logger(__name__)
     try:
@@ -105,3 +73,35 @@ def send_verification_email(email, token):
             "success": False,
             "message": f"Unexpected error sending verification email: {e}",
         }
+
+
+def send_2fa_code(email):
+    logger = setup_logger(__name__)
+    try:
+        code = secrets.randbelow(900000) + 100000
+
+        subject = "Your Two-Factor Authentication Code"
+        body = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif;">
+                <p>Hello,</p>
+                <p>Your <strong>2FA code</strong> is:</p>
+                <h2>{code}</h2>
+                <p>This code will expire in 5 minutes. </p>
+                <br>
+                <p style="font-size: 0.9em; color: #888;">If you did not request this, please ignore this message.</p>
+            </body>
+        </html>
+        """
+
+        sent = send_email(email, subject, body, is_html=True)
+        if not sent:
+            logger.error(red + f"Failed to send 2FA email to {email}" + reset)
+            return None
+
+        logger.info(green + f"2FA code sent to {email}" + reset)
+        return str(code)
+
+    except Exception as e:
+        logger.error(red + f"Error generating/sending 2FA code: {e}" + reset)
+        return None
