@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { handleInput } from "../utils/sanitizerHelper";
 import { handleRegisterSubmit } from "../utils/registerSubmitHandler";
 import { registerUser } from "../api/Register_api";
@@ -6,6 +7,7 @@ import Toast from "../components/Toast/ToastPopup";
 import styles from "./styles/Register.module.css";
 
 const RegisterScreen = () => {
+  const navigate = useNavigate();
   const emailRef = useRef(null);
   const nameRef = useRef(null);
   const passwordRef = useRef(null);
@@ -48,6 +50,7 @@ const RegisterScreen = () => {
       registerUser,
       setAttempts,
       attempts,
+      navigate,
     });
   };
 

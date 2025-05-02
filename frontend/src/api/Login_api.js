@@ -15,7 +15,6 @@ export const loginUser = async (formData, setToast) => {
     }
   } catch (err) {
     return {
-      // Still need to work on this but this will be a thing later one
       success: false,
       message: "A network error occurred. Please try again.",
     };

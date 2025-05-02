@@ -1,0 +1,16 @@
+.container {
+  display: grid;
+  justify-content: center;
+  text-align: center;
+  margin: 20vh auto;
+  padding: 2rem;
+  width: 400px;
+  border: 2px solid var(--clr-bordercolor);
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px hsla(0, 0%, 0%, 0.22);
+  background-color: var(--clr-boxcolor);
+}
+
+.title {
+  margin-bottom: 1rem;
+}

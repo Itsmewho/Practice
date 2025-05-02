@@ -22,7 +22,7 @@ def generate_verification_token():
 
 
 def hash_password(password):
-    logger = setup_logger
+    logger = setup_logger("hash_password")
     try:
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password.encode("utf-8"), salt)

@@ -22,9 +22,7 @@ def send_email(to_address, subject, body, is_html=False):
         content_type = "html" if is_html else "plain"
         msg.attach(MIMEText(body, content_type))
 
-        # Connect to SMTP server
-        with smtplib.SMTP(SMTP_HOST, int(SMTP_PORT)) as server:
-            server.starttls()
+        with smtplib.SMTP_SSL(SMTP_HOST, int(SMTP_PORT)) as server:
             server.login(SMTP_USER, SMTP_PASS)
             server.send_message(msg)
 

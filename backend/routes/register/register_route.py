@@ -1,7 +1,7 @@
 import re, json
 from services.email import send_verification_email
 from flask import Blueprint, jsonify, request
-from DB.redis_operations import set_cache, get_cache
+from DB.redis_operations import set_cache, get_cache, delete_cache
 from DB.sql_operations import (
     insert_record,
     fetch_records,
@@ -9,7 +9,6 @@ from DB.sql_operations import (
 from utils.utils import (
     generate_verification_token,
     hash_password,
-    setup_logger,
 )
 
 register_bp = Blueprint("register", __name__)
@@ -41,19 +40,17 @@ FIELD_RULES = {
 @register_bp.route("/api/register", methods=["POST"])
 def register():
     data = request.json
-
-    # IP + UA
     user_ip = request.remote_addr
     user_agent = request.headers.get("User-Agent", "")
     ip_key = f"register_attempts:{user_ip}"
 
     attempts = get_cache(ip_key)
-    if attempts and int(attempts) >= 5:
+    if attempts and int(attempts) >= 3:
         return (
             jsonify({"success": False, "message": "Too many attempts. Please wait."}),
             429,
         )
-    set_cache(ip_key, (int(attempts) if attempts else 0) + 1, ex=60)
+    set_cache(ip_key, (int(attempts) if attempts else 0) + 1, expire=60)
 
     sanitized_data = {}
     for field, rules in FIELD_RULES.items():
@@ -65,11 +62,9 @@ def register():
                 ),
                 400,
             )
-        sanitize_fn = rules.get("sanitize")
-        if sanitize_fn:
+        if sanitize_fn := rules.get("sanitize"):
             value = sanitize_fn(value)
-        validate_fn = rules.get("validate")
-        if validate_fn and not validate_fn(value):
+        if (validate_fn := rules.get("validate")) and not validate_fn(value):
             return (
                 jsonify(
                     {
@@ -81,45 +76,25 @@ def register():
             )
         sanitized_data[field] = value
 
-    data = sanitized_data
-    name = data.get("name")
-    email = data.get("email")
-    password = data.get("password")
-    is_verified = False
-
-    existing_user = fetch_records(
-        table_name="users", where_clause="email = %s", params=(email,)
-    )
-    if existing_user:
+    email = sanitized_data["email"]
+    if fetch_records("users", where_clause="email = %s", params=(email,)):
         return (
             jsonify({"success": False, "message": "Email is already registered."}),
             400,
         )
 
-    password = hash_password(password)
-    user_id = insert_record(
-        table_name="users",
-        columns=["name", "email", "password", "is_verified"],
-        values=(name, email, password, is_verified),
-    )
-    if not user_id:
-        return (
-            jsonify(
-                {"success": False, "message": "An error occurred while registering."}
-            ),
-            500,
-        )
+    sanitized_data["password"] = hash_password(sanitized_data["password"])
+    sanitized_data["ip"] = user_ip
+    sanitized_data["user_agent"] = user_agent
 
     token = generate_verification_token()
-    token_data = {
-        "email": email,
-        "ip": user_ip,
-        "user_agent": user_agent,
-    }
-    set_cache(f"verify:{token}", json.dumps(token_data), ex=300)
+    set_cache(f"verify:{token}", json.dumps(sanitized_data), expire=300)
 
-    email_result = send_verification_email(email, token)
-    if not email_result.get("success"):
+    cookie_token = generate_verification_token()
+    set_cache(f"cookie:{cookie_token}", "valid", expire=300)
+
+    result = send_verification_email(email, token)
+    if not result.get("success"):
         return (
             jsonify(
                 {"success": False, "message": "Failed to send verification email."}
@@ -127,7 +102,71 @@ def register():
             500,
         )
 
-    return (
-        jsonify({"success": True, "message": "User pending! Verification email sent."}),
-        200,
+    response = jsonify({"success": True, "message": "Verification email sent!"})
+    response.set_cookie(
+        key="verify_token",
+        value=cookie_token,
+        max_age=300,
+        httponly=False,  # Set to True if deploy but this is a fun project so.
+        samesite="Lax",
     )
+    return response, 200
+
+
+@register_bp.route("/api/verify-email", methods=["GET"])
+def verify_email():
+    token = request.args.get("token")
+    if not token:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "message": "Missing token.",
+                    "redirectImmediately": True,
+                }
+            ),
+            400,
+        )
+
+    raw = get_cache(f"verify:{token}")
+    if not raw:
+        return jsonify({"success": False, "message": "Invalid or expired token."}), 400
+
+    token_data = json.loads(raw)
+    if (
+        request.remote_addr != token_data["ip"]
+        or request.headers.get("User-Agent", "") != token_data["user_agent"]
+    ):
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "message": "Device mismatch. Use your original device.",
+                }
+            ),
+            403,
+        )
+
+    try:
+        insert_record(
+            table_name="users",
+            columns=["name", "email", "password", "is_verified"],
+            values=(
+                token_data["name"],
+                token_data["email"],
+                token_data["password"],
+                True,
+            ),
+        )
+        delete_cache(f"verify:{token}")
+        return (
+            jsonify(
+                {"success": True, "message": "Email verified and account created!"}
+            ),
+            200,
+        )
+    except Exception:
+        return (
+            jsonify({"success": False, "message": "Failed to complete registration."}),
+            500,
+        )

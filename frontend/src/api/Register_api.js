@@ -5,9 +5,13 @@ export const registerUser = async (formData) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
-    if (response.ok) {
-      return;
-    }
+
+    const result = await response.json();
+
+    return {
+      success: response.ok,
+      message: result.message,
+    };
   } catch (err) {
     return {
       success: false,
