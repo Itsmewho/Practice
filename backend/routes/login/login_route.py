@@ -120,7 +120,6 @@ def verify_login():
     token_email = token_data["email"]
     token_user_id = token_data["user_id"]
 
-    # Match IP and User-Agent
     if (
         request.remote_addr != token_ip
         or request.headers.get("User-Agent", "") != token_ua
@@ -134,6 +133,19 @@ def verify_login():
             ),
             403,
         )
+
+    fail_key = f"login_fails:{token_email}:{token_ip}"
+    current_fails = int(get_cache(fail_key) or 0)
+
+    if current_fails >= 3:
+        response = jsonify(
+            {
+                "success": False,
+                "message": "Too many failed attempts. Please login again.",
+            }
+        )
+        response.delete_cookie("login_cookie")
+        return response, 403
 
     user = fetch_records("users", where_clause="id = %s", params=(token_user_id,))
     if not user:
@@ -155,6 +167,7 @@ def verify_login():
 
     delete_cache(f"2fa:{code}")
     delete_cache(f"login_sent:{token_email}:{token_ip}")
+    delete_cache(fail_key)
 
     response = jsonify({"success": True, "message": "Login successful."})
     response.set_cookie(
@@ -162,7 +175,8 @@ def verify_login():
         value=session_token,
         max_age=3600,
         httponly=True,
-        samesite="Lax",
+        samesite="Strict",
         secure=HTTPONLY,
     )
+    response.delete_cookie("login_cookie")
     return response, 200

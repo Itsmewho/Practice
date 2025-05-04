@@ -5,6 +5,8 @@ const LoggedInRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
 
   useEffect(() => {
+    let intervalId;
+
     const checkSession = async () => {
       try {
         const res = await fetch("/api/auth/session-check", {
@@ -16,11 +18,16 @@ const LoggedInRoute = ({ children }) => {
         setIsValid(false);
       }
     };
+
     checkSession();
+
+    intervalId = setInterval(checkSession, 600);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   if (isValid === null) return <div>Loading session...</div>;
-  return isValid ? children : <Navigate to="/login" replace />;
+  return isValid ? children : <Navigate to="/" replace />;
 };
 
 export default LoggedInRoute;

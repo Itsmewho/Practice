@@ -5,6 +5,8 @@ const LoginVerificationRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
 
   useEffect(() => {
+    let intervalId;
+
     const checkLoginCookie = async () => {
       try {
         const res = await fetch("/api/auth/verify-login-cookie", {
@@ -16,7 +18,12 @@ const LoginVerificationRoute = ({ children }) => {
         setIsValid(false);
       }
     };
+
     checkLoginCookie();
+
+    intervalId = setInterval(checkLoginCookie, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   if (isValid === null) return <div>Verifying login...</div>;
