@@ -1,5 +1,5 @@
-import os
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -12,15 +12,8 @@ REDIS_DB = int(os.getenv("REDIS_DB", 0))
 # -- SQL
 CONNECTION_STRING = os.getenv("DB_CONNECTION")
 
-# -- Keys
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-SESSION_KEY = os.getenv("SESSION_KEY")
-RESET_KEY = os.getenv("RESET_KEY")
-UNLOCK_KEY = os.getenv("UNLOCK_KEY")
 
 # -- Email
-
 SMTP_HOST = os.getenv("SMTP_HOST")
 SMTP_PORT = os.getenv("SMTP_PORT")
 SMTP_USER = os.getenv("SMTP_USER")
@@ -28,5 +21,9 @@ SMTP_PASS = os.getenv("SMTP_PASS")
 
 
 # --- URLS
+BASE_URL = "http://localhost:5500"
 
-BASE_URL = os.getenv("BASE_URL")
+
+# --- HTTP
+HTTPONLY = False  # Set to True in production
+SESSION_EXPIRE_SECONDS = 3600

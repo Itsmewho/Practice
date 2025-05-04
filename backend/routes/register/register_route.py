@@ -1,4 +1,5 @@
-import re, json
+import json
+from config.configure import HTTPONLY
 from services.email import send_verification_email
 from flask import Blueprint, jsonify, request
 from DB.redis_operations import set_cache, get_cache, delete_cache
@@ -6,35 +7,9 @@ from DB.sql_operations import (
     insert_record,
     fetch_records,
 )
-from utils.utils import (
-    generate_verification_token,
-    hash_password,
-)
+from utils.utils import generate_verification_token, hash_password, FIELD_RULES
 
 register_bp = Blueprint("register", __name__)
-
-
-FIELD_RULES = {
-    "name": {
-        "required": True,
-        "sanitize": lambda value: re.sub(r"[^A-Za-z0-9 _-]", "", value),
-    },
-    "email": {
-        "required": True,
-        "sanitize": lambda value: value.strip(),
-        "validate": lambda value: re.fullmatch(
-            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", value
-        )
-        is not None,
-        "error_message": "Invalid email format.",
-    },
-    "password": {
-        "required": True,
-        "sanitize": lambda value: re.sub(r'[<>"\'`;]', "", value),
-        "validate": lambda value: len(value) >= 6,
-        "error_message": "Password must be at least 6 characters.",
-    },
-}
 
 
 @register_bp.route("/api/register", methods=["POST"])
@@ -107,8 +82,9 @@ def register():
         key="verify_token",
         value=cookie_token,
         max_age=300,
-        httponly=False,  # Set to True if deploy but this is a fun project so.
+        httponly=True,
         samesite="Lax",
+        secure=HTTPONLY,
     )
     return response, 200
 

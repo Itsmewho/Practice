@@ -35,8 +35,10 @@ export const handleLoginSubmit = async ({
 
   showToast(setToast, result.message, result.success ? "success" : "error");
 
+  resetForm(setFormData, setInputStatus);
+
   if (result.success) {
-    setTimeout(() => navigate("/2Fa"), 1500);
+    setTimeout(() => navigate("/verify-2fa"), 1500);
   } else {
     setAttempts((prev) => {
       const updated = prev + 1;
@@ -49,6 +51,18 @@ export const handleLoginSubmit = async ({
       return updated;
     });
   }
+};
+
+const resetForm = (setFormData, setInputStatus) => {
+  setFormData({
+    email: "",
+    password: "",
+  });
+
+  setInputStatus({
+    email: "",
+    password: "",
+  });
 };
 
 const validateBeforeSubmit = ({ formData, setInputStatus, setToast }) => {

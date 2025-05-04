@@ -1,4 +1,4 @@
-import logging, bcrypt, secrets
+import logging, bcrypt, secrets, re, random
 from colorama import Style, Fore
 
 
@@ -7,6 +7,48 @@ blue = Fore.BLUE
 yellow = Fore.YELLOW
 red = Fore.RED
 green = Fore.GREEN
+
+
+FIELD_RULES = {
+    "name": {
+        "required": True,
+        "sanitize": lambda value: re.sub(r"[^A-Za-z0-9 _-]", "", value),
+    },
+    "email": {
+        "required": True,
+        "sanitize": lambda value: value.strip(),
+        "validate": lambda value: re.fullmatch(
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", value
+        )
+        is not None,
+        "error_message": "Invalid email format.",
+    },
+    "password": {
+        "required": True,
+        "sanitize": lambda value: re.sub(r'[<>"\'`;]', "", value),
+        "validate": lambda value: len(value) >= 6,
+        "error_message": "Password must be at least 6 characters.",
+    },
+}
+
+
+LOGIN_RULES = {
+    "email": {
+        "required": True,
+        "sanitize": lambda v: v.strip(),
+        "validate": lambda v: re.fullmatch(
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", v
+        )
+        is not None,
+        "error_message": "Invalid email format.",
+    },
+    "password": {
+        "required": True,
+        "sanitize": lambda v: re.sub(r'[<>"\'`;]', "", v),
+        "validate": lambda v: len(v) >= 6,
+        "error_message": "Password must be at least 6 characters.",
+    },
+}
 
 
 def setup_logger(name: str, level=logging.INFO):
@@ -19,6 +61,10 @@ def setup_logger(name: str, level=logging.INFO):
 
 def generate_verification_token():
     return secrets.token_urlsafe(32)
+
+
+def generate_six_digit_code():
+    return f"{random.randint(100000, 999999)}"
 
 
 def hash_password(password):

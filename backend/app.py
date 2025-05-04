@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask import send_from_directory
 from routes.register.register_route import register_bp
 from routes.auth.auth_routes import auth_bp
+from routes.login.login_route import login_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +12,7 @@ CORS(app)
 # All routes.
 app.register_blueprint(register_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(login_bp)
 
 
 # Favicon fun
