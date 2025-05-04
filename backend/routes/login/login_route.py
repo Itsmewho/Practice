@@ -162,7 +162,7 @@ def verify_login():
                 "user_agent": token_ua,
             }
         ),
-        expire=3600,
+        expire=900,
     )
 
     delete_cache(f"2fa:{code}")
@@ -173,7 +173,7 @@ def verify_login():
     response.set_cookie(
         key="session_token",
         value=session_token,
-        max_age=3600,
+        max_age=900,
         httponly=True,
         samesite="Strict",
         secure=HTTPONLY,

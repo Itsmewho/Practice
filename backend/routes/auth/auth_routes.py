@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify
-from DB.redis_operations import get_cache, set_cache
+from flask import Blueprint, request, jsonify, json
+from DB.redis_operations import get_cache, set_cache, delete_cache
 from config.configure import HTTPONLY, SESSION_EXPIRE_SECONDS
 
 auth_bp = Blueprint("auth", __name__)
@@ -27,11 +27,32 @@ def session_check():
     if not token:
         return jsonify({"success": False}), 403
 
-    data = get_cache(f"session:{token}")
-    if not data:
-        return jsonify({"success": False}), 403
+    raw = get_cache(f"session:{token}")
+    if not raw:
+        response = jsonify({"success": False})
+        response.delete_cookie("session_token")
+        return response, 403
 
-    set_cache(f"session:{token}", data, expire=SESSION_EXPIRE_SECONDS)
+    session_data = json.loads(raw)
+    expected_ip = session_data.get("ip")
+    expected_ua = session_data.get("user_agent")
+
+    current_ip = request.remote_addr
+    current_ua = request.headers.get("User-Agent", "")
+
+    if expected_ip != current_ip or expected_ua != current_ua:
+        delete_cache(f"session:{token}")
+        response = jsonify(
+            {
+                "success": False,
+                "message": "Session environment mismatch. You have been logged out.",
+            }
+        )
+        response.delete_cookie("session_token")
+        return response, 403
+
+    # Refresh session TTL
+    set_cache(f"session:{token}", raw, expire=SESSION_EXPIRE_SECONDS)
 
     response = jsonify({"success": True})
     response.set_cookie(
@@ -39,7 +60,7 @@ def session_check():
         value=token,
         max_age=SESSION_EXPIRE_SECONDS,
         httponly=True,
-        samesite="Lax",
+        samesite="Strict",
         secure=HTTPONLY,
     )
     return response, 200

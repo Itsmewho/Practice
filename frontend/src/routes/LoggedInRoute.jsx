@@ -5,8 +5,6 @@ const LoggedInRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
 
   useEffect(() => {
-    let intervalId;
-
     const checkSession = async () => {
       try {
         const res = await fetch("/api/auth/session-check", {
@@ -20,10 +18,6 @@ const LoggedInRoute = ({ children }) => {
     };
 
     checkSession();
-
-    intervalId = setInterval(checkSession, 600);
-
-    return () => clearInterval(intervalId);
   }, []);
 
   if (isValid === null) return <div>Loading session...</div>;

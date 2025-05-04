@@ -26,4 +26,4 @@ BASE_URL = "http://localhost:5500"
 
 # --- HTTP
 HTTPONLY = False  # Set to True in production
-SESSION_EXPIRE_SECONDS = 3600
+SESSION_EXPIRE_SECONDS = 900  # 15min
