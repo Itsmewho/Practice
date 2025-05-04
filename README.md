@@ -1,7 +1,14 @@
-- Login system with 2fa and email confirmation af register.
-- Redis caching for cross-ref.
-- Cookies for "protected routes" HTTPONLY with redis crossref for fun. Option to set secure=True.
+- Login system with 2fa.
+- Email confirmation register with uniek URL's.
 - IP and UA checks.
+- Cookies for "protected routes" HTTPONLY with backend checks for fun. Option to set secure=True.
 
-- PostgreSQL for user DB
+- Redis caching for cross-ref.
+
+- Input sanitization for code injections ect.
+- Backend sanitzations in case frontend fails.
+
+- Toast msg for user info.
+
+- PostgreSQL for user DB.
 - SMTP for emails.
