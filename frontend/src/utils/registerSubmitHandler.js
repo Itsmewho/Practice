@@ -10,7 +10,6 @@ export const handleRegisterSubmit = async ({
   registerUser,
   setAttempts,
   attempts,
-  navigate,
 }) => {
   e.preventDefault();
 
@@ -36,12 +35,9 @@ export const handleRegisterSubmit = async ({
   resetForm(setFormData, setInputStatus);
 
   if (result.success) {
-    setTimeout(() => {
-      navigate("/register-success");
-    }, 2000);
     showToast(
       setToast,
-      "Registration successful! Please check your email.",
+      "Registration successful! Please verify your email.",
       "success"
     );
   } else {

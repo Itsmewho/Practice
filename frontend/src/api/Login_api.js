@@ -1,18 +1,17 @@
-export const loginUser = async (formData) => {
+import { showToast } from "../utils/toastHelper";
+
+export const loginUser = async (formData, setToast) => {
   try {
     const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include",
     });
 
-    const data = await response.json();
-
     if (response.ok) {
-      return { success: true, message: data.message };
+      showToast(setToast, "Welcome Back!", "success");
     } else {
-      return { success: false, message: data.message || "Login failed." };
+      showToast(setToast, "Login failed. Please try again.", "error");
     }
   } catch (err) {
     return {
